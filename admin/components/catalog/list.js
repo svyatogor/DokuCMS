@@ -130,7 +130,7 @@ class List extends React.Component {
 
 const folder = gql`
   query folder($id: ID!) {
-    folder(id: $id) { id name hidden }
+    folder(id: $id) { id name hidden image }
   }
 `
 

@@ -31,7 +31,8 @@ const folderSchema = new Schema({
   position: {type: Number, default: 9999},
   parent: {type: Schema.Types.ObjectId, ref: 'Folder'},
   site: {type: Schema.Types.ObjectId, ref: 'Site'},
-  hidden:  {type: Boolean, default: false},
+  hidden: {type: Boolean, default: false},
+  image: String,
   catalog: String,
   deleted:  {type: Boolean, default: false},
 })

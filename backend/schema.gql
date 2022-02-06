@@ -58,6 +58,7 @@ type Site {
 type Folder {
   id: ID!
   slug: String
+  image: String
   parent: ID
   name: JSON
   position: Int
@@ -114,6 +115,7 @@ input FolderInput {
   id: ID
   parent: ID
   catalog: String
+  image: String
   name: String!
   locale: String
   hidden: Boolean

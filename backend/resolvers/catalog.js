@@ -86,7 +86,7 @@ export default class {
 
   @mutation
   static async upsertFolder({site}, {folder}) {
-    let {id, name, parent, locale, catalog, hidden} = folder
+    let {id, name, parent, locale, catalog, hidden, image} = folder
     if (id) {
       const folder = await Folder.findOne({_id: id, site: site.id})
       if (!folder) {
@@ -105,6 +105,7 @@ export default class {
           [locale]: name
         })
       }
+      folder.set('image', image)
       if (isBoolean(hidden)) {
         folder.hidden = hidden
       }
@@ -129,7 +130,7 @@ export default class {
       }
       position++
 
-      const folder = new Folder({name: {[locale]: name}, parent, position, catalog, site: site.id, deleted: false})
+      const folder = new Folder({name: {[locale]: name}, parent, position, catalog, image, site: site.id, deleted: false})
       await folder.save()
       return folder
     }
