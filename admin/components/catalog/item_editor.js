@@ -124,14 +124,8 @@ class ItemEditor extends Component {
       <Field
         name={key}
         key={key}
-        component={args => {
-            if (!isObject(args.input.value)) {
-              args.input.value = new Date()
-            }
-            return new DatePicker(args)
-          }
-        }
-        autoOk
+        component={TextField}
+        type="date"
         floatingLabelText={humanize(underscore(key))}
         fullWidth floatingLabelFixed
         required={key === this.props.catalog.labelField}
@@ -279,7 +273,10 @@ const mapStateToProps = ({app, ...state}, ownProps) => {
   const item = get(ownProps, 'data.item.data')
   const {catalog} = ownProps
   const defaultValues = mapValues(catalog.fields, field => {
-    if (field.type === 'date') return moment().startOf('day').toISOString()
+    if (field.type === 'date') {
+      console.log(moment().startOf('day').format("YYYY-MM-DD"))
+      return moment().startOf('day').format("YYYY-MM-DD")
+    }
 
     return undefined
   })
@@ -294,7 +291,7 @@ const mapStateToProps = ({app, ...state}, ownProps) => {
       const type = get(catalog.fields, [field, 'type'])
       switch (type) {
         case 'date':
-          return isString(value) ? new Date(value) : new Date()
+          return moment(value).format('YYYY-MM-DD')
         case 'datetime':
           return moment(value).format('YYYY-MM-DDTHH:mm')
         default:

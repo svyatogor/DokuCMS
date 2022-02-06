@@ -118,7 +118,7 @@ class ItemsList extends React.Component {
         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
           {this.deleteItemConfirmationDialog}
           <TableRow>
-            {map(visibleFields, f =>
+            {map(visibleFields.filter(Boolean), f =>
               <TableHeaderColumn key={f}>{humanize(f)}</TableHeaderColumn>
             )}
             <TableHeaderColumn />
