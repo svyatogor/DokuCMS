@@ -1,6 +1,6 @@
 import {defaults, map, isString} from 'lodash'
 import {Folder} from '../../models'
-
+import Promise from 'bluebird'
 export class catalogmenu {
   constructor(renderContext) {
     this.tags = ['catalogmenu']
@@ -53,7 +53,7 @@ export class catalogmenu {
       // }
 
       return foldersQuery.sort('position').cache().then(async folders => {
-        return Promise.all(map(folders, async folder => {
+        return Promise.mapSeries(folders, async folder => {
           const contentFolder = await folder.toContext({locale: ctx.req.locale})
           ctx[key] = {
             ...contentFolder,
@@ -65,7 +65,7 @@ export class catalogmenu {
               else { resolve(data) }
             })
           })
-        })).then(data => {
+        }).then(data => {
           ctx[key] = originalValue
           callback(null, data.join(''))
         })
