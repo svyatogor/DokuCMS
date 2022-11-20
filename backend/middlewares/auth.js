@@ -65,6 +65,8 @@ auth.post('/auth/login', async (req, res) => {
     res.redirect(config.loginUrl)
     return
   }
+  user.set('lastLogin', new Date())
+  await user.save()
   const viewer = omit(user.toObject(), 'password')
   res.cookie(`${key}-authtoken`, jwt.sign(viewer, process.env.JWT_SECRET), {
     domain: req.hostname,
