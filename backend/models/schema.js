@@ -119,6 +119,17 @@ const orderSchema = new Schema({
   // updatedAt: Date,
 }, {strict: false, timestamps: true})
 
+const auditLogSchema = new Schema({
+  action: {type: String, required: true},
+  site: {type: Schema.Types.ObjectId, ref: 'Site'},
+  user: {type: Schema.Types.ObjectId, ref: 'Item', index: true},
+  object: {type: Schema.Types.ObjectId, ref: 'Item', index: true},
+  admin: {type: Schema.Types.ObjectId, ref: 'User', index: true},
+  meta: Object
+}, {strict: false, timestamps: true})
+
+auditLogSchema.index({site: 1, user: 1,  createdAt: -1, action: 1})
+
 // orderSchema.pre('save', function(next) {
 //   const now = new Date()
 //   this.updatedAt = now
@@ -137,4 +148,5 @@ export {
   folderSchema,
   fileListSchema,
   orderSchema,
+  auditLogSchema,
 }

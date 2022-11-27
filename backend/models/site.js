@@ -1,16 +1,16 @@
 import {siteSchema} from './schema'
 import mongoose from 'mongoose'
 import fs from 'fs'
-import s3 from 's3'
 import {humanize} from 'inflection'
 import {zipObject, forEach} from 'lodash'
 import nunjucks from 'nunjucks'
+import {S3} from '@aws-sdk/client-s3'
 import * as tags from '../renderers/tags'
-import {redis} from '../services'
+
+const s3 = new S3({region: 'eu-west-1'});
 
 class SiteClass {
   get layouts() {
-    const key = `site::${this._id}::layouts`
     // return redis.getAsync(key).then((layoutsJson) => {
     //   if (layoutsJson) {
     //     return JSON.parse(layoutsJson)
@@ -67,23 +67,20 @@ class SiteClass {
     if (file.indexOf('layouts') !== 0) {
       return Promise.resolve()
     }
-    const client = s3.createClient({s3Options: {region: 'eu-west-1'}})
-    return new Promise((resolve, reject) => {
-      const downloader = client.downloadFile({
-        localFile: `./data/${this.key}/${file}`,
-        s3Params: {
-          Bucket: process.env.S3_BUCKET,
-          Key: `${this.key}/${file}`
-        }
+    return new Promise(async (resolve, reject) => {
+      const obj = await s3.getObject({
+        Bucket: process.env.S3_BUCKET,
+        Key: `${this.key}/${file}`
       })
-      downloader.on('error', err => {
-        // TODO: Report error
-        console.error(`Error syncing ${this.key}/${file}`, err)
-        reject(err)
-      })
-      downloader.on('end', () => {
+      const outFileStream = fs.createWriteStream(`./data/${this.key}/${file}`)
+      obj.Body.pipe(outFileStream)
+      outFileStream.on('finish', () => {
         console.error(`Done syncing ${this.key}/${file}`)
         resolve()
+      })
+      outFileStream.on('error', (err) => {
+        console.error(`Error syncing ${this.key}/${file}`, err)
+        reject(err)
       })
     })
   }

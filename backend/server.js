@@ -1,9 +1,10 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cachegoose from 'cachegoose'
-import s3 from 's3'
 import bodyParser from 'body-parser'
 import fetch from 'node-fetch'
+import {S3Client} from '@aws-sdk/client-s3'
+import S3SyncClient from 's3-sync-client'
 import Promise from 'bluebird'
 import {Site} from './models'
 import auth from './auth'
@@ -18,34 +19,17 @@ cachegoose(mongoose)
 
 const app = express()
 app.use(require('cookie-parser')())
-const syncS3 = () => {
-	const client = s3.createClient({
-		s3Options: {
-			// accessKeyId: "your s3 key",
-			// secretAccessKey: "your s3 secret",
-			region: 'eu-west-1'
-		},
-	})
+const syncS3 = async () => {
+	const s3Client = new S3Client({region: 'eu-west-1'});
+	const { sync } = new S3SyncClient({ client: s3Client });
+	console.log(await sync(`s3:///${process.env.S3_BUCKET}`, `./data`))
+	console.log('S3 sync complete')
+	// const sites = Site.find()
+	// await Promise.map(sites, async site => {
+	// 	console.log(`Syncing layout for ${site.key}`)
 
-	Site.find().then(sites => {
-		sites.forEach(site => {
-			console.log(`Syncing layout for ${site.key}`)
-			const downloader = client.downloadDir({
-				localDir: `./data/${site.key}`,
-				s3Params: {
-					Bucket: process.env.S3_BUCKET,
-					Prefix: `${site.key}`
-				}
-			})
-			downloader.on('error', err => {
-				// TODO: Report error
-				console.error(`Error syncing layout for ${site.key}`, err)
-			})
-			downloader.on('end', () => {
-				console.log(`Finished syncing layout for ${site.key}`)
-			})
-		})
-	})
+	// 	console.log(`Syncing layout for ${site.key} done`)
+	// })
 }
 
 const setSnsBodyType = (req, res, next) => {

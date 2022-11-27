@@ -51,7 +51,7 @@ class Catalog extends React.Component {
           <Switch>
             <Route path={`${url}/search/:search`} render={this.renderComponent(Search)} />
             <Route path={`${url}/item/new`} render={this.renderComponent(ItemEditorPage)} />
-            <Route path={`${url}/item/:itemId`} render={this.renderComponent(ItemEditor)} />
+            <Route path={`${url}/item/:itemId`} render={this.renderComponent(ItemEditorPage)} />
             <Route path={`${url}`} render={this.renderComponent(FlatList)} />
           </Switch>
         )

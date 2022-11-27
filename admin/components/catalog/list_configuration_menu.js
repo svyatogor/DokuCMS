@@ -7,7 +7,7 @@ import {
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import {grey500} from 'material-ui/styles/colors'
 import {omitBy, includes, get} from 'lodash'
-import {humanize} from 'inflection'
+import {humanize, underscore} from 'inflection'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleField} from '../../actions'
@@ -42,7 +42,7 @@ class ListConfigurationMenu extends React.Component {
           const disabled = key === labelField
           const checked = includes(visibleFields, key)
           return (<MenuItem
-            primaryText={humanize(key)}
+            primaryText={humanize(underscore(key))}
             key={key}
             style={{paddingLeft: disabled ? 70 : (checked ? -5 : 55)}}
             onTouchTap={() => toggleField(siteKey, catalogKey, key)}

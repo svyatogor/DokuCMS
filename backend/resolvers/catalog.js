@@ -6,6 +6,20 @@ import {Folder, Item} from '../models'
 import SearchService from '../services/search'
 import Promise from 'bluebird'
 
+export function resolveItem(site, item) {
+  if (!item) {
+    return item
+  }
+  const schema = site.documentTypes[item.catalog]
+  const hiddenFields = Object.keys(schema.fields).filter(f => schema.fields[f].type === 'password')
+  const label = schema.labelField ? item.get(schema.labelField) : ''
+  return {
+    id: item.id,
+    label,
+    data: omit(item.toObject(), hiddenFields)
+  }
+}
+
 export default class {
   @query
   static folders({site}, {catalog}) {
@@ -20,14 +34,7 @@ export default class {
   @query
   static async item({site}, {id}) {
     const item = await Item.findOne({site: site.id, _id: id})
-    const schema = site.documentTypes[item.catalog]
-    const hiddenFields = Object.keys(schema.fields).filter(f => schema.fields[f].type === 'password')
-    const label = schema.labelField ? item.get(schema.labelField) : ''
-    return {
-      id: item.id,
-      label,
-      data: omit(item.toObject(), hiddenFields)
-    }
+    return resolveItem(site, item)
   }
 
   @query

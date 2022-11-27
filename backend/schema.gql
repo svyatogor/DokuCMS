@@ -89,6 +89,22 @@ type Item {
   label: String
 }
 
+type User {
+  id: ID!
+  name: String
+  email: String
+}
+
+type AuditLog {
+  id: ID!
+  action: String
+  user: Item
+  object: Item
+  admin: User
+  meta: JSON
+  createdAt: Date
+}
+
 input PageInput {
   id: ID
   slug: String
@@ -187,6 +203,7 @@ type Query {
   items(folder: ID, search: String, catalog: String): [Item!]!
   item(id: ID!): Item
   eshopOrders(search: String, limit: Int, offset: Int): [Order]
+  auditLog(limit: Int, offset: Int, user: ID, object: ID, admin: ID): [AuditLog!]!
 }
 
 type Mutation {

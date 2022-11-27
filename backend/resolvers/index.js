@@ -9,6 +9,7 @@ const resolvers = {
     ...require('./catalog').default.queries,
     ...require('./file_list').default.queries,
     ...require('./eshop').default.queries,
+    ...require('./audit_log').default.queries,
   },
   Mutation: {
     ...require('./page').default.mutations,

@@ -11,7 +11,7 @@ import {
   FlatButton,
 } from 'material-ui'
 import {get, map} from 'lodash'
-import {humanize} from 'inflection'
+import {humanize, underscore} from 'inflection'
 import {graphql, gql} from 'react-apollo'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
@@ -119,7 +119,7 @@ class ItemsList extends React.Component {
           {this.deleteItemConfirmationDialog}
           <TableRow>
             {map(visibleFields.filter(Boolean), f =>
-              <TableHeaderColumn key={f}>{humanize(f)}</TableHeaderColumn>
+              <TableHeaderColumn key={f}>{humanize(underscore(f))}</TableHeaderColumn>
             )}
             <TableHeaderColumn />
           </TableRow>

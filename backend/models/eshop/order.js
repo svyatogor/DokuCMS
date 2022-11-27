@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import {sumBy, some, isNil, get, includes, pickBy, pick, mapValues} from 'lodash'
+import {sumBy, some, isNil, get, includes, pickBy, pick, mapValues, map} from 'lodash'
 import Promise from 'bluebird'
 import {orderSchema} from '../schema'
 import Product from './product'
@@ -102,6 +102,7 @@ class OrderClass {
         return Product.findOne({_id: line.product, site: this.site, $or: [{stock: {$gte: line.count}}, {byOrder: true}]})
       })
       if (some(products, isNil)) {
+        // const outOfStockLines = map(this.lines, (_, idx) => this.lines[idx])
         throw new Error("Not enough stock")
       }
       await completePayment()
