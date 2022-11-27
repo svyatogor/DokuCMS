@@ -22,14 +22,8 @@ app.use(require('cookie-parser')())
 const syncS3 = async () => {
 	const s3Client = new S3Client({region: 'eu-west-1'});
 	const { sync } = new S3SyncClient({ client: s3Client });
-	console.log(await sync(`s3:///${process.env.S3_BUCKET}`, `./data`))
+	console.log(await sync(`s3://${process.env.S3_BUCKET}`, `./data`))
 	console.log('S3 sync complete')
-	// const sites = Site.find()
-	// await Promise.map(sites, async site => {
-	// 	console.log(`Syncing layout for ${site.key}`)
-
-	// 	console.log(`Syncing layout for ${site.key} done`)
-	// })
 }
 
 const setSnsBodyType = (req, res, next) => {
