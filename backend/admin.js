@@ -74,6 +74,10 @@ admin.use('/api/s3', require('react-dropzone-s3-uploader/s3router')({
 admin.get('/api/images', requireUser, async (req, res) => {
   const {type, id} = req.query
   const klass = require('./models')[type]
+  if (!klass) {
+    console.log(`No model found for ${type}`)
+    res.sendStatus(500)
+  }
   const object = await klass.findById(id)
   res.json(map(object.images, url => ({
     thumb: url,
