@@ -114,6 +114,9 @@ export default class {
   @mutation
   static async attachImage(context, {type, id, url}) {
     const klass = require('../models')[type]
+    if (!klass) {
+      throw new Error(`No model found for ${type}`)
+    }
     const object = await klass.findById(id)
     return object.attach(url)
   }

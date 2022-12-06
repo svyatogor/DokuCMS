@@ -76,7 +76,7 @@ admin.get('/api/images', requireUser, async (req, res) => {
   const klass = require('./models')[type]
   if (!klass) {
     console.log(`No model found for ${type}`)
-    res.sendStatus(500)
+    return res.sendStatus(500)
   }
   const object = await klass.findById(id)
   res.json(map(object.images, url => ({
