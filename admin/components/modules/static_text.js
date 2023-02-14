@@ -22,7 +22,7 @@ class StaticText extends React.Component {
     const value = this.state.value || t(this.props.data.staticText.content, locale)
     const parent = {type: 'StaticText', id: this.props.id}
     return (<div>
-      <Redactor value={value} onChange={(value) => this.setState({value})} parent={parent} />
+      <Redactor value={value || ''} onChange={(value) => this.setState({value})} parent={parent} />
       <div className={common.formActions}>
         <RaisedButton label="Save" primary={true} disabled={!this.state.value} type="submit" onTouchTap={() => this.save()} />
       </div>

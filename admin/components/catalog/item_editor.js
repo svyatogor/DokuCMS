@@ -49,7 +49,7 @@ class ItemEditor extends Component {
       this.props
     const {showAuditLog} = this.state || {}
     const label = get(this.props.formValues, catalog.labelField)
-    const title = match.params.itemId === 'new' ? `New ${catalogKey}` : label
+    const title = match && match.params.itemId === 'new' ? `New ${catalogKey}` : label
     return (
       <div>
         <h1 style={{marginBottom: 20}}>{title}</h1>
