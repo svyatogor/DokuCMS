@@ -27,25 +27,29 @@ auth.use(async (req, res, next) => {
         res.redirect(config.loginUrl)
         return
       }
-      req.viewer = jwt.verify(token, process.env.JWT_SECRET).catch(e => undefined)
-      if (req.viewer) {
-        try {
-          const user = await User.findOne({site: req.site._id, catalog: req.site.auth.userModel, _id: req.viewer._id})
-          const now = new Date()
-          if (!user.get('lastActiveAt') || now - user.get('lastActiveAt') > 1000 * 60 * 60 * 24) {
-            user.set('lastActiveAt', now)
-            await user.save()
-          }
-          await AuditLogClass.userDailyAccess(user, {ip: req.ip})
-          next()
-        } catch (e) {
-          console.error(e)
-          res.sendStatus(500).end()
-        }
-      } else {
+
+      try {
+        req.viewer = jwt.verify(token, process.env.JWT_SECRET)
+      } catch (e) {
         res.clearCookie(cookieName)
         res.redirect(config.loginUrl)
+        return
       }
+
+      try {
+        const user = await User.findOne({site: req.site._id, catalog: req.site.auth.userModel, _id: req.viewer._id})
+        const now = new Date()
+        if (!user.get('lastActiveAt') || now - user.get('lastActiveAt') > 1000 * 60 * 60 * 24) {
+          user.set('lastActiveAt', now)
+          await user.save()
+        }
+        await AuditLogClass.userDailyAccess(user, {ip: req.ip})
+        next()
+      } catch (e) {
+        console.error(e)
+        res.sendStatus(500).end()
+      }
+
     } else {
       next()
     }
