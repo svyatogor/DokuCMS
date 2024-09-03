@@ -21,12 +21,13 @@ auth.use(async (req, res, next) => {
     }
     const regexps = map(config.secureUrls, r => new RegExp(r))
     if (req.path !== config.loginUrl && !req.originalUrl.startsWith('/auth/') && some(regexps, r => req.originalUrl.match(r))) {
-      const token = req.cookies[`${req.site.key}-authtoken`]
+      const cookieName = `${req.site.key}-authtoken`
+      const token = req.cookies[cookieName]
       if (!token) {
         res.redirect(config.loginUrl)
         return
       }
-      req.viewer = jwt.verify(token, process.env.JWT_SECRET)
+      req.viewer = jwt.verify(token, process.env.JWT_SECRET).catch(e => undefined)
       if (req.viewer) {
         try {
           const user = await User.findOne({site: req.site._id, catalog: req.site.auth.userModel, _id: req.viewer._id})
@@ -42,6 +43,7 @@ auth.use(async (req, res, next) => {
           res.sendStatus(500).end()
         }
       } else {
+        res.clearCookie(cookieName)
         res.redirect(config.loginUrl)
       }
     } else {

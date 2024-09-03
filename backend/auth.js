@@ -1,6 +1,5 @@
 import express from 'express'
 import {get, find, includes} from 'lodash'
-import cors from 'cors'
 import jwtExpress from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2'
