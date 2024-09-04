@@ -38,6 +38,11 @@ auth.use(async (req, res, next) => {
 
       try {
         const user = await User.findOne({site: req.site._id, catalog: req.site.auth.userModel, _id: req.viewer._id})
+        if (!user) {
+          res.clearCookie(cookieName)
+          res.redirect(config.loginUrl)
+          return
+        }
         const now = new Date()
         if (!user.get('lastActiveAt') || now - user.get('lastActiveAt') > 1000 * 60 * 60 * 24) {
           user.set('lastActiveAt', now)
