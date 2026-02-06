@@ -11,7 +11,7 @@ class PageClass {
       let self = this
       while(self.parent) {
         const needle = self.parent._id || self.parent
-        const parent = find(allPages, {_id: needle})
+        const parent = find(allPages, p => p._id.toString() === needle.toString())
         fullPath.push(parent.slug)
         self = parent
       }
