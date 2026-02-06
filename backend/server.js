@@ -12,8 +12,23 @@ import frontend from './frontend'
 
 import './models'
 mongoose.Promise = require('bluebird')
-mongoose.connect(process.env.DB_URI)
+mongoose.connect(process.env.DB_URI, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex: true,
+	useFindAndModify: false,
+})
+mongoose.connection.on('error', (err) => {
+	console.error('Mongoose connection error:', err)
+})
+mongoose.connection.on('disconnected', () => {
+	console.log('Mongoose disconnected')
+})
 mongoose.set('debug', process.env.NODE_ENV === 'development')
+
+process.on('unhandledRejection', (err) => {
+	console.error('Unhandled promise rejection:', err)
+})
 cachegoose(mongoose)
 
 const app = express()
