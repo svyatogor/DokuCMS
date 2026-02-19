@@ -68,7 +68,7 @@
     "joi-phone-number-extensions": "^1.0.1",
     "jquery": "1.11.3",
     "jsonic": "^0.3.0",
-    "jsonwebtoken": "^7.4.2",
+    "jsonwebtoken": "^9.0.0",
     "langs": "^2.0.0",
     "lodash": "^4.17.4",
     "material-ui": "^0.18.7",
