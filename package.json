@@ -66,7 +66,7 @@
     "joi-errors-for-forms": "^0.2.5",
     "joi-json": "^2.0.1",
     "joi-phone-number-extensions": "^1.0.1",
-    "jquery": "1.11.3",
+    "jquery": "3.5.0",
     "jsonic": "^0.3.0",
     "jsonwebtoken": "^7.4.2",
     "langs": "^2.0.0",
