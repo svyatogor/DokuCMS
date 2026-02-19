@@ -70,7 +70,7 @@
     "jsonic": "^0.3.0",
     "jsonwebtoken": "^7.4.2",
     "langs": "^2.0.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "material-ui": "^0.18.7",
     "material-ui-search-bar": "^0.4.1",
     "mdi": "^2.0.46",
